@@ -9,11 +9,6 @@ if (window.SECRET_EMOJI_KEY != 'set') {
         return window.$('.message-body-content > div:not(.' + emojiClass + ')').toArray();
     }
 
-    /*var emojiMap = {
-        parrot: 'https://cultofthepartyparrot.com/parrots/hd/parrot.gif',
-        realParrot: 'https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif'
-    }*/
-
     function createImgTag(source) {
         return '<img class="emoji-img" src="' + source + '">';
     }
@@ -64,11 +59,8 @@ if (window.SECRET_EMOJI_KEY != 'set') {
 
     function init(window) {
         injectCSS(CssInject, window.document);
-        //getMessageContentList(window).forEach(div => processMessageDiv(div));
-        //window.alert('start');
         var timer = window.setInterval(
             () => {
-                //window.alert('update');
                 var list = getMessageContentList(window);
                 console.log(list);
                 list.forEach(div => processMessageDiv(div));
@@ -181,13 +173,4 @@ if (window.SECRET_EMOJI_KEY != 'set') {
     }
 
     init(window);
-    //alert('Hello World!');
-
-    /*app.on('browser-window-focus', function (event, bWindow) {
-        //init(bWindow);
-        bWindow.webContents.executeJavaScript(`
-        console.log("helpe");
-        alert('Hello World!');
-        `)
-    })*/
 }
