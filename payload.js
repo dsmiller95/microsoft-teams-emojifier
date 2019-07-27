@@ -1,9 +1,6 @@
+//Make sure the payload is injected only once per context at most
 if (window.SECRET_EMOJI_KEY != 'set') {
     window.SECRET_EMOJI_KEY = 'set';
-
-    function upperWords(sent) {
-        return sent.split(" ").map(x => x ? (x[0].toUpperCase() + x.substr(1)) : x).join(' ');
-    }
 
     function getMessageContentList(window) {
         return window.$('.message-body-content > div:not(.' + emojiClass + ')').toArray();
@@ -15,10 +12,8 @@ if (window.SECRET_EMOJI_KEY != 'set') {
 
     var emojiMatch = /:([\\w-]+):/g;
     function injectEmojiImages(inputText) {
-        console.log(emojiMatch);
         var resultStr = "";
         var matches = inputText.matchAll(emojiMatch);
-        console.log(matches);
         var currentIndexInInput = 0;
 
         var match;
@@ -31,6 +26,8 @@ if (window.SECRET_EMOJI_KEY != 'set') {
         }
         resultStr += inputText.substring(currentIndexInInput, inputText.length);
         if (!resultStr.endsWith('&nbsp;')) {
+            //a characer of some sort is requred to get emoji at the end of a message to display correctly
+            // don't ask me why
             resultStr += '&nbsp;';
         }
         return resultStr;
@@ -50,16 +47,16 @@ if (window.SECRET_EMOJI_KEY != 'set') {
             position: static !important;
         }`
 
-    function injectCSS(inputCss, bDoc) {
-        var style = bDoc.createElement('style');
+    function injectCSS(inputCss, doc) {
+        var style = doc.createElement('style');
         style.innerHTML = inputCss;
         style.setAttribute('style', 'text/css');
-        bDoc.getElementsByTagName('HEAD')[0].appendChild(style);
+        doc.getElementsByTagName('HEAD')[0].appendChild(style);
     }
 
     function init(window) {
         injectCSS(CssInject, window.document);
-        var timer = window.setInterval(
+        window.setInterval(
             () => {
                 var list = getMessageContentList(window);
                 console.log(list);
@@ -70,7 +67,7 @@ if (window.SECRET_EMOJI_KEY != 'set') {
     }
 
     var emojiMap = {
-        parrot: "https://cultofthepartyparrot.com/parrots/hd/parrot.gif",
+        "parrot": "https://cultofthepartyparrot.com/parrots/hd/parrot.gif",
         "open-source-parrot": "https://cultofthepartyparrot.com/parrots/hd/opensourceparrot.gif",
         "middle-parrot": "https://cultofthepartyparrot.com/parrots/hd/middleparrot.gif",
         "reverse-parrot": "https://cultofthepartyparrot.com/parrots/hd/reverseparrot.gif",
