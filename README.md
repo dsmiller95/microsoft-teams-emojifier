@@ -2,7 +2,7 @@
 
 Adds custom emoji to microsoft teams' electron app.
 
-This is a feature that was [requested in late 2016](https://microsoftteams.uservoice.com/forums/555103-public/suggestions/16934329-allow-adding-custom-emoji-memes-gifs-reactions), but microsoft isn't listening to the obviously ravenus need of emoji, so the task is left up to us.
+This is a feature that was [requested in late 2016](https://microsoftteams.uservoice.com/forums/555103-public/suggestions/16934329-allow-adding-custom-emoji-memes-gifs-reactions), but microsoft isn't listening to the obviously ravenous need of emoji, so the task is left up to us.
 
 ## Disclaimer
 
