@@ -57,7 +57,7 @@ if (window.SECRET_EMOJI_KEY != 'set') {
 
     var CssInject = `
         .emoji-img {
-            height: 1em !important;
+            height: 2em !important;
             display: inline-block;
             position: static !important;
         }`;
@@ -76,8 +76,8 @@ if (window.SECRET_EMOJI_KEY != 'set') {
 
             window.setInterval(
                 () => {
-                    var list = getMessageContentList(window);
-                    list.forEach(div => emojifyMessageDiv(div, emojis));
+                    var messageList = getMessageContentList(window);
+                    messageList.forEach(div => emojifyMessageDiv(div, emojis));
                 },
                 1000
             );
