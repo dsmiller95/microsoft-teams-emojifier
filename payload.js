@@ -79,7 +79,7 @@ if (window.SECRET_EMOJI_KEY != 'set') {
                     var messageList = getMessageContentList(window);
                     messageList.forEach(div => emojifyMessageDiv(div, emojis));
                 },
-                1000
+                2000
             );
         });
     }
