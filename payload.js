@@ -2,7 +2,7 @@
 if (window.SECRET_EMOJI_KEY != 'set') {
     window.SECRET_EMOJI_KEY = 'set';
 
-    const emojiApiPath = 'https://sheltered-spire-54939.herokuapp.com';
+    const emojiApiPath = EMOJI_API;
 
     function getValidEmojis() {
         return new Promise((resolve, reject) => {
