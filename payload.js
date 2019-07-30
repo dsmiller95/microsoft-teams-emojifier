@@ -1,8 +1,33 @@
+
+function breakIntoTopPageScope(javascriptString) {
+    const script = document.createElement('script');
+    script.setAttribute('type', 'text/javascript');
+    script.innerHTML = javascriptString;
+
+    const header = document.getElementsByTagName('head')[0];
+    header.appendChild(script);
+}
+
 //Make sure the payload is injected only once per context at most
 if (window.SECRET_EMOJI_KEY != 'set') {
     window.SECRET_EMOJI_KEY = 'set';
+    if (window.EMOJI_API) {
+        // if this is an injection into the electron app
+        inject(window.EMOJI_API, window);
+    } else if (chrome && chrome.storage) {
+        // if we are in the chrome extension
+        chrome.storage.sync.get('api-url', (data) => {
+            setTimeout(() => {
+                const EMOJI_URL = data['api-url'];
+                //we need to break into the top-level scope to make use of the JQuery-lite utility that already exists in ms-teams
+                breakIntoTopPageScope(inject.toString() + `;inject('${EMOJI_URL}');`);
+            },
+                1000);
+        });
+    }
+}
 
-    const emojiApiPath = EMOJI_API;
+function inject(emojiApiPath) {
 
     function getValidEmojis() {
         return new Promise((resolve, reject) => {
@@ -14,15 +39,15 @@ if (window.SECRET_EMOJI_KEY != 'set') {
         });
     }
 
-    function getMessageContentList(window) {
-        return window.$('.message-body-content > div:not(.' + emojiClass + ')').toArray();
+    function getMessageContentList() {
+        return $('.message-body-content > div:not(.' + emojiClass + ')').toArray();
     }
 
     function createImgTag(emoticonName) {
         return '<img class="emoji-img" src="' + emojiApiPath + '/emoticon/' + emoticonName + '">';
     }
 
-    var emojiMatch = /:([\\w-]+):/g;
+    var emojiMatch = /:([\w-]+):/g;
     function injectEmojiImages(inputText, validEmojis) {
         var resultStr = "";
         var matches = inputText.matchAll(emojiMatch);
@@ -62,21 +87,21 @@ if (window.SECRET_EMOJI_KEY != 'set') {
             position: static !important;
         }`;
 
-    function injectCSS(inputCss, doc) {
-        var style = doc.createElement('style');
+    function injectCSS(inputCss) {
+        var style = document.createElement('style');
         style.innerHTML = inputCss;
         style.setAttribute('style', 'text/css');
-        doc.getElementsByTagName('HEAD')[0].appendChild(style);
+        document.getElementsByTagName('HEAD')[0].appendChild(style);
     }
 
-    function init(window) {
-        injectCSS(CssInject, window.document);
+    function init() {
+        injectCSS(CssInject);
+        console.log("fetching valid emojis from " + emojiApiPath);
         getValidEmojis().then(emojis => {
             console.log(emojis);
-
-            window.setInterval(
+            setInterval(
                 () => {
-                    var messageList = getMessageContentList(window);
+                    var messageList = getMessageContentList();
                     messageList.forEach(div => emojifyMessageDiv(div, emojis));
                 },
                 2000
@@ -84,5 +109,5 @@ if (window.SECRET_EMOJI_KEY != 'set') {
         });
     }
 
-    init(window);
+    init();
 }

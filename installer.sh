@@ -10,10 +10,10 @@ sed -i '/\/\*\{8\}BEGIN EMOJIINJECT\*\{8\}\//,/\/\*\{8\}END EMOJIINJECT\*\{8\}\/
 echo "/********BEGIN EMOJIINJECT********/" >> ./electron.unpacked/browser/chrome-extension.js;
 echo "app.on('browser-window-focus', function (event, bWindow) {bWindow.webContents.executeJavaScript(\`" >> ./electron.unpacked/browser/chrome-extension.js;
 #Inject the source emoji server from an environment variable
-echo "const EMOJI_API = '"$EMOJI_URL"';" >> ./electron.unpacked/browser/chrome-extension.js;
-#sed is used here to escape any existing `` quotes. using those style of quotes for now because the payload comes in as multiline
+echo "window.EMOJI_API = '"$EMOJI_URL"';" >> ./electron.unpacked/browser/chrome-extension.js;
+#sed is used here to escape any existing backtick quotes or escape characters. using those style of quotes for now because the payload comes in as multiline
 #in the future would be nice to have a minified single-line payload to inject
-sed 's/`/\\`/g' payload.js >> ./electron.unpacked/browser/chrome-extension.js
+sed 's/\\/\\\\/g' payload.js | sed 's/`/\\`/g' >> ./electron.unpacked/browser/chrome-extension.js
 echo "\`)})" >> ./electron.unpacked/browser/chrome-extension.js
 echo "/********END EMOJIINJECT********/" >> ./electron.unpacked/browser/chrome-extension.js;
 
