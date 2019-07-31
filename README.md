@@ -4,12 +4,6 @@ Adds custom emoji to microsoft teams, both in browser and in electron!
 
 This is a feature that was [requested in late 2016](https://microsoftteams.uservoice.com/forums/555103-public/suggestions/16934329-allow-adding-custom-emoji-memes-gifs-reactions), but microsoft isn't listening to our ravenous need of emoji, so the task is left up to us.
 
-## Disclaimer
-
-**USE AT YOUR OWN RISK: ONLY USE THIS IF YOU KNOW WHAT YOU'RE DOING**
-
-This is going to inject code into your locally running Microsoft Teams electron app: code injected this way can potentially steal your credentials and gain access to your local filesystem. Whenever you inject code like this, make sure you know what the code is doing.
-
 ## Setup
 
 Both the electron app mod and the chrome extension require a connection to an external emoji server. They have been designed to work against a deployment of this repository: [github.com/dsmiller95/custom-emoji-server](https://github.com/dsmiller95/custom-emoji-server)
@@ -40,3 +34,10 @@ Supports full external emoji sources! This is built to run against a server like
 ## Implementation overview
 
 The injection payload will look for any currently rendered messages every 2 seconds. For every message that hasn't been parsed yet, it will look for any patterns matching `:[\w-]+:` and replace the text with an `<img>` tag if an emoji exists by that name.
+
+## Disclaimer
+
+**USE AT YOUR OWN RISK: ONLY USE THIS IF YOU KNOW WHAT YOU'RE DOING**
+
+This is going to inject code into your locally running Microsoft Teams electron app: code injected this way can potentially steal your credentials and gain access to your local filesystem. Whenever you inject code like this, make sure you know what the code is doing.
+
