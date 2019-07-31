@@ -16,12 +16,18 @@ I will write this package to be as secure as I feel like, know that **I AM NOT A
 
 If you use the web client and not the electron app, this plugin is available as a [chrome extension](https://chrome.google.com/webstore/detail/microsoft-teams-emojinato/eflminelddfglcbimfpncahdiacnnegk)
 
+* install the extension
+* go to the extension options and enter your team's emoji provider url, and press the button
+* go to the web app, and you should see the emojis!
+
 To get this setup on your installed electron client with the default install location, follow these steps:
 
 * clone this repo
 * `npm install`
 * `EMOJI_URL=<custom emoji server url> npm run install-local`
   * If you have a non-standard install location, modify the [installer](./installer.sh) script to point to your electron package. default path to the install directory is ~/AppData/Local/Microsoft/Teams/
+* Make sure to restart microsoft teams -- you may need to find it in the taskbar and kill it manually. If all else fails, restart
+* when you reopen Teams, you should see all the emoticons
 
 
 ## Support
