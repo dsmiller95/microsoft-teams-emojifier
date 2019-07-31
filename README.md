@@ -12,6 +12,8 @@ This is going to inject code into your locally running Microsoft Teams electron 
 
 ## Setup
 
+Both the electron app mod and the chrome extension require a connection to an external emoji server. They have been designed to work against a deployment of this repository: [github.com/dsmiller95/custom-emoji-server](https://github.com/dsmiller95/custom-emoji-server)
+
 If you use the web client and not the electron app, this plugin is available as a [chrome extension](https://chrome.google.com/webstore/detail/microsoft-teams-emojinato/eflminelddfglcbimfpncahdiacnnegk)
 
 * install the extension
