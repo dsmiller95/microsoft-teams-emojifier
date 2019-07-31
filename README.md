@@ -8,9 +8,7 @@ This is a feature that was [requested in late 2016](https://microsoftteams.userv
 
 **USE AT YOUR OWN RISK: ONLY USE THIS IF YOU KNOW WHAT YOU'RE DOING**
 
-This is going to inject code into your locally running Microsoft Teams electron app: code injected this way can potentially steal your credentials and gain access to your local filesystem. Whenever you inject code like this, make absolutely sure you know what the code is doing.
-
-I will write this package to be as secure as I feel like, know that **I AM NOT A SECURITY EXPERT**. If you are, please tear my code to shreds. And even if you're not!
+This is going to inject code into your locally running Microsoft Teams electron app: code injected this way can potentially steal your credentials and gain access to your local filesystem. Whenever you inject code like this, make sure you know what the code is doing.
 
 ## Setup
 
@@ -29,6 +27,9 @@ To get this setup on your installed electron client with the default install loc
 * Make sure to restart microsoft teams -- you may need to find it in the taskbar and kill it manually. If all else fails, restart
 * when you reopen Teams, you should see all the emoticons
 
+## Removal
+
+Simply re-run the installer for Microsoft Teams, and the original installation files should overwrite the modified versions, removing the emojinator
 
 ## Support
 
