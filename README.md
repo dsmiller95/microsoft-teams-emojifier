@@ -1,8 +1,8 @@
 # Emojinator
 
-Adds custom emoji to microsoft teams' electron app.
+Adds custom emoji to microsoft teams, both in browser and in electron!
 
-This is a feature that was [requested in late 2016](https://microsoftteams.uservoice.com/forums/555103-public/suggestions/16934329-allow-adding-custom-emoji-memes-gifs-reactions), but microsoft isn't listening to the obviously ravenous need of emoji, so the task is left up to us.
+This is a feature that was [requested in late 2016](https://microsoftteams.uservoice.com/forums/555103-public/suggestions/16934329-allow-adding-custom-emoji-memes-gifs-reactions), but microsoft isn't listening to our ravenous need of emoji, so the task is left up to us.
 
 ## Disclaimer
 
@@ -10,16 +10,19 @@ This is a feature that was [requested in late 2016](https://microsoftteams.userv
 
 This is going to inject code into your locally running Microsoft Teams electron app: code injected this way can potentially steal your credentials and gain access to your local filesystem. Whenever you inject code like this, make absolutely sure you know what the code is doing.
 
-I will write this package to be as secure as I feel like, know that **I AM NOT A SECURITY EXPERT**. If you are, please tear my code to shreds. Even if you're not!
+I will write this package to be as secure as I feel like, know that **I AM NOT A SECURITY EXPERT**. If you are, please tear my code to shreds. And even if you're not!
 
 ## Setup
 
-To get this setup on your client with the default install location, these steps should work:
+If you use the web client and not the electron app, this plugin is available as a [chrome extension](https://chrome.google.com/webstore/detail/microsoft-teams-emojinato/eflminelddfglcbimfpncahdiacnnegk)
+
+To get this setup on your installed electron client with the default install location, follow these steps:
 
 * clone this repo
 * `npm install`
 * `EMOJI_URL=<custom emoji server url> npm run install-local`
   * If you have a non-standard install location, modify the [installer](./installer.sh) script to point to your electron package. default path to the install directory is ~/AppData/Local/Microsoft/Teams/
+
 
 ## Support
 
