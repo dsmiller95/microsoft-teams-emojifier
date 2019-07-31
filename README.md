@@ -18,7 +18,7 @@ To get this setup on your installed electron client with the default install loc
 
 * clone this repo
 * `npm install`
-* `EMOJI_URL=<custom emoji server url> npm run install-local`
+* Run this in a shell or bash: `EMOJI_URL=<custom emoji server url> npm run install-local`
   * If you have a non-standard install location, modify the [installer](./installer.sh) script to point to your electron package. default path to the install directory is ~/AppData/Local/Microsoft/Teams/
 * Make sure to restart microsoft teams -- you may need to find it in the taskbar and kill it manually. If all else fails, restart
 * when you reopen Teams, you should see all the emoticons
