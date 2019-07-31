@@ -5,7 +5,8 @@
   "main": "Payload.js",
   "scripts": {
     "test": "",
-    "install-local": "sh installer.sh"
+    "install-local": "sh installer.sh",
+    "build-extension": "sh build-chrome-extension.sh"
   },
   "author": "",
   "license": "ISC",

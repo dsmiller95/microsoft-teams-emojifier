@@ -1,0 +1,28 @@
+{
+    "name": "Emojifi microsoft teams",
+    "version": "1.0",
+    "description": "Adds emoji to microsoft teams!",
+    "permissions": [
+        "storage",
+        "activeTab"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://teams.microsoft.com/*"
+            ],
+            "run_at": "document_idle",
+            "js": [
+                "payload.js"
+            ]
+        }
+    ],
+    "icons": {
+        "16": "thonk16.png",
+        "32": "thonk32.png",
+        "48": "thonk48.png",
+        "128": "thonk128.png"
+    },
+    "options_page": "options.html",
+    "manifest_version": 2
+}
