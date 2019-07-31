@@ -1,7 +1,7 @@
 {
-    "name": "Emojifi microsoft teams",
+    "name": "Microsoft Teams Emojinator",
     "version": "1.0",
-    "description": "Adds emoji to microsoft teams!",
+    "description": "Adds emoji to microsoft teams via an external emoji server!",
     "permissions": [
         "storage",
         "activeTab"
