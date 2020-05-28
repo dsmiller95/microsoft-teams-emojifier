@@ -9,7 +9,7 @@
     "content_scripts": [
         {
             "matches": [
-                "https://teams.microsoft.com/*"
+                "https://teams.microsoft.com.us3.cas.ms/*"
             ],
             "run_at": "document_idle",
             "js": [

@@ -46,6 +46,14 @@ function inject(emojiApiPath) {
     function createImgTag(emoticonName) {
         return '<img class="emoji-img" src="' + emojiApiPath + '/emoticon/' + emoticonName + '">';
     }
+    
+    function createElementFromHTML(htmlString) {
+        var div = document.createElement('div');
+        div.innerHTML = htmlString.trim();
+      
+        // Change this to div.childNodes to support multiple top-level nodes
+        return div.firstChild; 
+      }
 
     var emojiMatch = /:([\w-]+):/g;
     function injectEmojiImages(inputText, validEmojis) {
@@ -80,12 +88,108 @@ function inject(emojiApiPath) {
         div.classList.add(emojiClass);
     }
 
+    function typeInInput(text){
+        const editorWindow = document.getElementsByClassName('ts-edit-box').item(0);
+        const textContainer = editorWindow.getElementsByClassName('cke_editable').item(0).firstElementChild;
+        textContainer.innerText = textContainer.innerText + text;
+    }
+
+    function gridify(list, width){
+        const grid = [];
+        for (let row = 0; row < list.length / width; row++) {
+            var newRow = [];
+            var colLength = Math.min(width, list.length - (row * width));
+            for(let col = 0; col < colLength; col++){
+                newRow[col] = list[row * width + col];
+            }
+            grid.push(newRow);
+        }
+        return grid;
+    }
+
+    function generateCloseHeader(closeListener){
+        const closeHeader = document.createElement('div');
+        closeHeader.style.textAlign = 'end';
+        const closeOption = document.createElement('span');
+        closeOption.innerText = 'Close';
+        closeOption.style.fontSize = '1.2em';
+        closeOption.style.fontWeight = '700';
+        closeOption.style.cursor = 'pointer';
+        closeOption.addEventListener('click', (event) => {
+            closeListener(event);
+        });
+        closeHeader.appendChild(closeOption);
+        return closeHeader;
+    }
+
+    function createEmojiGrid(emojiList, emojiClickListener, closeListener) {
+        const emojiGrid = gridify(emojiList, 20);
+        const table = document.createElement('table');
+        
+        emojiGrid.forEach(row => {
+            const rowElement = document.createElement('tr');
+            row.forEach(element => {
+                const tableData = document.createElement('td');
+                tableData.innerHTML = createImgTag(element);
+                tableData.addEventListener('click', (event) => {
+                    emojiClickListener(event, element);
+                })
+                rowElement.appendChild(tableData);
+            })
+            table.appendChild(rowElement);
+        });
+
+        const outputT = document.createElement('div');
+        outputT.className = 'emoji-table';
+        outputT.appendChild(generateCloseHeader(closeListener));
+        outputT.appendChild(table);
+        console.log(outputT);
+        return outputT;
+    }
+
+    function injectPreviewButton(emojiList) {
+        var emojiButton = document.getElementsByTagName('input-extension-emoji').item(0).firstElementChild;
+        // Clone the control to disconnect all event listeners
+        var emojiCloned = emojiButton.cloneNode(true);
+        var buttonContainer = emojiButton.parentNode;
+        buttonContainer.replaceChild(emojiCloned, emojiButton);
+        
+        var emojiTable = createEmojiGrid(emojiList, (event, emoji) => {
+            console.log(emoji + ' clicked');
+            emojiTable.style.display = 'none';
+            typeInInput(`:${emoji}:`)
+        }, (event) => {
+            emojiTable.style.display = 'none';
+        });
+        buttonContainer.appendChild(emojiTable);
+
+        emojiCloned.addEventListener('click', () => {
+            emojiTable.style.display = 'block';
+        });
+    }
+
+
     var CssInject = `
-        .emoji-img {
-            height: 2em !important;
-            display: inline-block;
-            position: static !important;
-        }`;
+.emoji-img {
+    height: 2em !important;
+    display: inline-block;
+    position: static !important;
+}
+.emoji-table {
+    background: #C8C8C8;
+    position: absolute;
+    z-index: 1000;
+    left: 100px;
+    bottom: 30px;
+    font-size: 1.4rem;
+    overflow-y: scroll;
+    height:200px;
+    display: none;
+}
+.emoji-table .emoji-img {
+    cursor: pointer;
+}
+        `;
 
     function injectCSS(inputCss) {
         var style = document.createElement('style');
@@ -99,6 +203,9 @@ function inject(emojiApiPath) {
         console.log("fetching valid emojis from " + emojiApiPath);
         getValidEmojis().then(emojis => {
             console.log(emojis);
+            setTimeout(() => {
+                injectPreviewButton(emojis);
+            }, 1000)
             setInterval(
                 () => {
                     var messageList = getMessageContentList();
