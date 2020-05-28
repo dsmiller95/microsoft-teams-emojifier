@@ -122,8 +122,10 @@ function inject(emojiApiPath) {
             }, debounce);
         });
 
-        inputBox.addEventListener('change', event => {
-            onFilterSelected(inputBox.value);
+        inputBox.addEventListener('keydown', event => {
+            if(event.key === 'Enter'){
+                onFilterSelected(inputBox.value);
+            }
         });
 
         return inputBox;
@@ -157,7 +159,8 @@ function inject(emojiApiPath) {
         const filterBox = generateFilterBox(newFilter => {
             emojiFilterChangeListeners.forEach(onchange => onchange(newFilter));
         }, 500, selectedFilter => {
-            emojiSelectedListener(null, emojiList.find(emoji => emoji.contains(selectedFilter)));
+            var emoji = emojiList.find(emoji => emoji.contains(selectedFilter));
+            emojiSelectedListener(null, emoji);
             onClose();
         });
         emojiFilterChangeListeners = emojiList.map(emoji => {
