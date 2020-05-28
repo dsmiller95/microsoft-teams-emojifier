@@ -158,6 +158,8 @@ function inject(emojiApiPath) {
         };
         const filterBox = generateFilterBox(newFilter => {
             emojiFilterChangeListeners.forEach(onchange => onchange(newFilter));
+            
+            table.scrollTop = table.scrollHeight;
         }, 500, selectedFilter => {
             var emoji = emojiList.find(emoji => emoji.contains(selectedFilter));
             emojiSelectedListener(null, emoji);
@@ -177,11 +179,12 @@ function inject(emojiApiPath) {
 
         const outputT = document.createElement('div');
         outputT.className = 'emoji-popup';
-        outputT.appendChild(generateCloseHeader(onClose));
-        outputT.appendChild(filterBox);
         outputT.appendChild(table);
+        outputT.appendChild(filterBox);
+        outputT.appendChild(generateCloseHeader(onClose));
         const onOpen = () => {
             outputT.style.display = 'block';
+            table.scrollTop = table.scrollHeight;
             filterBox.focus();
         };
         return {
@@ -243,11 +246,13 @@ function inject(emojiApiPath) {
     bottom: 30px;
     font-size: 1.4rem;
     display: none;
+    color: black; //dark mode makes all text white
 }
 .emoji-flex-table {
     display: flex;
-    flex-flow: row wrap;
-    align-content: flex-start;
+    flex-flow: row-reverse wrap;
+    justify-content: flex-end;
+    align-items: flex-end;
     height:200px;
     width: 500px;
     overflow-y: scroll;
