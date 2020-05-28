@@ -253,7 +253,7 @@ function inject(emojiApiPath) {
     flex-flow: row-reverse wrap;
     justify-content: flex-end;
     align-items: flex-end;
-    height:200px;
+    max-height: 200px;
     width: 500px;
     overflow-y: scroll;
 }
