@@ -50,8 +50,20 @@ function inject(emojiApiPath) {
         var div = document.createElement('div');
         div.innerHTML = htmlString.trim();
         return div.firstChild; 
-      }
+    }
 
+    function crawlTree(htmlElement, handleLeaf){
+        if(htmlElement.childElementCount <= 0){
+            handleLeaf(htmlElement);
+            return;
+        }
+        for (let index = 0; index < htmlElement.children.length; index++) {
+            const htmlChildElement = htmlElement.children[index];
+            crawlTree(htmlChildElement, handleLeaf);
+        }
+    }
+
+    var emojiClass = 'EMOJIFIER-CHECKED';
     var emojiMatch = /:([\w-]+):/g;
     function injectEmojiImages(inputText, validEmojis) {
         var resultStr = "";
@@ -79,10 +91,11 @@ function inject(emojiApiPath) {
         return resultStr;
     }
 
-    var emojiClass = 'EMOJIFIER-CHECKED';
-
     function emojifyMessageDiv(div, validEmojis) {
-        div.innerHTML = injectEmojiImages(div.innerHTML, validEmojis);
+        crawlTree(div, (leaf) => {
+            leaf.innerHTML = injectEmojiImages(leaf.innerHTML, validEmojis);
+        });
+        //div.innerHTML = injectEmojiImages(div.innerHTML, validEmojis);
         div.classList.add(emojiClass);
     }
 
