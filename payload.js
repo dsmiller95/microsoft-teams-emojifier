@@ -50,8 +50,6 @@ function inject(emojiApiPath) {
     function createElementFromHTML(htmlString) {
         var div = document.createElement('div');
         div.innerHTML = htmlString.trim();
-      
-        // Change this to div.childNodes to support multiple top-level nodes
         return div.firstChild; 
       }
 
@@ -113,7 +111,7 @@ function inject(emojiApiPath) {
         return closeHeader;
     }
 
-    function generateFilterBox(onFilterChange, debounce){
+    function generateFilterBox(onFilterChange, debounce, onFilterSelected){
         const inputBox = document.createElement('input');
         let lastTimeout = 0;
 
@@ -123,6 +121,10 @@ function inject(emojiApiPath) {
                 var filterValue = inputBox.value;
                 onFilterChange(filterValue);
             }, debounce);
+        });
+
+        inputBox.addEventListener('change', event => {
+            onFilterSelected(inputBox.value);
         });
 
         return inputBox;
@@ -143,23 +145,28 @@ function inject(emojiApiPath) {
         return emojiName.contains(filterText);
     }
 
-    function createEmojiGrid(emojiList, emojiClickListener, closeListener) {
+    function createEmojiGrid(emojiList, emojiSelectedListener, closeListener) {
         const table = document.createElement('div');
         table.classList = 'emoji-flex-table';
 
         let emojiFilterChangeListeners = [];
+        const onClose = (event) => {
+            filterBox.value = '';
+            emojiFilterChangeListeners.forEach(onchange => onchange(''));
+            closeListener(event);
+        };
         const filterBox = generateFilterBox(newFilter => {
             console.log(newFilter);
             emojiFilterChangeListeners.forEach(onchange => onchange(newFilter));
-        }, 500);
-        const onClose = (event) => {
-            filterBox.value = '';
-            closeListener(event);
-        };
+        }, 500, selectedFilter => {
+            console.log('selected' + selectedFilter);
+            emojiSelectedListener(null, emojiList.find(emoji => emoji.contains(selectedFilter)));
+            onClose();
+        });
         emojiFilterChangeListeners = emojiList.map(emoji => {
             const emojiElement = createElementFromHTML(createImgTag(emoji));
             emojiElement.addEventListener('click', (event) => {
-                emojiClickListener(event, emoji);
+                emojiSelectedListener(event, emoji);
                 onClose(event);
             });
             table.appendChild(emojiElement);
@@ -174,7 +181,14 @@ function inject(emojiApiPath) {
         outputT.appendChild(filterBox);
         outputT.appendChild(table);
         console.log(outputT);
-        return outputT;
+        const onOpen = () => {
+            outputT.style.display = 'block';
+            filterBox.focus();
+        };
+        return {
+            element: outputT,
+            onOpen
+        };
     }
 
     function getEmojiPreviewButtonList() {
@@ -195,7 +209,7 @@ function inject(emojiApiPath) {
         var buttonContainer = previousPreviewButton.parentNode;
         buttonContainer.replaceChild(emojiCloned, previousPreviewButton);
         
-        var emojiTable = createEmojiGrid(emojiList, (event, emoji) => {
+        var {element: emojiTable, onOpen} = createEmojiGrid(emojiList, (event, emoji) => {
             console.log(emoji + ' clicked');
             typeInInput(':'+emoji+':')
         }, (event) => {
@@ -204,7 +218,9 @@ function inject(emojiApiPath) {
         buttonContainer.appendChild(emojiTable);
 
         emojiCloned.addEventListener('click', () => {
-            emojiTable.style.display = 'block';
+            console.log('opening');
+            onOpen();
+            //emojiTable.style.display = 'block';
         });
     }
 
