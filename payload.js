@@ -24,7 +24,6 @@ if (window.SECRET_EMOJI_KEY != 'set') {
                 1000);
         });
     }
-    console.log("done");
 }
 
 function inject(emojiApiPath) {
@@ -156,10 +155,8 @@ function inject(emojiApiPath) {
             closeListener(event);
         };
         const filterBox = generateFilterBox(newFilter => {
-            console.log(newFilter);
             emojiFilterChangeListeners.forEach(onchange => onchange(newFilter));
         }, 500, selectedFilter => {
-            console.log('selected' + selectedFilter);
             emojiSelectedListener(null, emojiList.find(emoji => emoji.contains(selectedFilter)));
             onClose();
         });
@@ -180,14 +177,14 @@ function inject(emojiApiPath) {
         outputT.appendChild(generateCloseHeader(onClose));
         outputT.appendChild(filterBox);
         outputT.appendChild(table);
-        console.log(outputT);
         const onOpen = () => {
             outputT.style.display = 'block';
             filterBox.focus();
         };
         return {
             element: outputT,
-            onOpen
+            onOpen,
+            onClose
         };
     }
 
@@ -209,8 +206,8 @@ function inject(emojiApiPath) {
         var buttonContainer = previousPreviewButton.parentNode;
         buttonContainer.replaceChild(emojiCloned, previousPreviewButton);
         
-        var {element: emojiTable, onOpen} = createEmojiGrid(emojiList, (event, emoji) => {
-            console.log(emoji + ' clicked');
+        var open = false;
+        var {element: emojiTable, onOpen, onClose} = createEmojiGrid(emojiList, (event, emoji) => {
             typeInInput(':'+emoji+':')
         }, (event) => {
             emojiTable.style.display = 'none';
@@ -218,9 +215,13 @@ function inject(emojiApiPath) {
         buttonContainer.appendChild(emojiTable);
 
         emojiCloned.addEventListener('click', () => {
-            console.log('opening');
-            onOpen();
-            //emojiTable.style.display = 'block';
+            if(open){
+                onClose();
+                open = false;
+            } else {
+                onOpen();
+                open = true;
+            }
         });
     }
 

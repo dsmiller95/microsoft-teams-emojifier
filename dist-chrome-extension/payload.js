@@ -187,7 +187,8 @@ function inject(emojiApiPath) {
         };
         return {
             element: outputT,
-            onOpen
+            onOpen,
+            onClose
         };
     }
 
@@ -209,7 +210,8 @@ function inject(emojiApiPath) {
         var buttonContainer = previousPreviewButton.parentNode;
         buttonContainer.replaceChild(emojiCloned, previousPreviewButton);
         
-        var {element: emojiTable, onOpen} = createEmojiGrid(emojiList, (event, emoji) => {
+        var open = false;
+        var {element: emojiTable, onOpen, onClose} = createEmojiGrid(emojiList, (event, emoji) => {
             console.log(emoji + ' clicked');
             typeInInput(':'+emoji+':')
         }, (event) => {
@@ -219,7 +221,13 @@ function inject(emojiApiPath) {
 
         emojiCloned.addEventListener('click', () => {
             console.log('opening');
-            onOpen();
+            if(open){
+                onClose();
+                open = false;
+            } else {
+                onOpen();
+                open = true;
+            }
             //emojiTable.style.display = 'block';
         });
     }
