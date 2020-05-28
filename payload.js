@@ -211,6 +211,7 @@ function inject(emojiApiPath) {
             typeInInput(':'+emoji+':')
         }, (event) => {
             emojiTable.style.display = 'none';
+            open = false;
         });
         buttonContainer.appendChild(emojiTable);
 
