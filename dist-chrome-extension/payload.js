@@ -24,7 +24,6 @@ if (window.SECRET_EMOJI_KEY != 'set') {
                 1000);
         });
     }
-    console.log("done");
 }
 
 function inject(emojiApiPath) {
@@ -156,10 +155,8 @@ function inject(emojiApiPath) {
             closeListener(event);
         };
         const filterBox = generateFilterBox(newFilter => {
-            console.log(newFilter);
             emojiFilterChangeListeners.forEach(onchange => onchange(newFilter));
         }, 500, selectedFilter => {
-            console.log('selected' + selectedFilter);
             emojiSelectedListener(null, emojiList.find(emoji => emoji.contains(selectedFilter)));
             onClose();
         });
@@ -180,7 +177,6 @@ function inject(emojiApiPath) {
         outputT.appendChild(generateCloseHeader(onClose));
         outputT.appendChild(filterBox);
         outputT.appendChild(table);
-        console.log(outputT);
         const onOpen = () => {
             outputT.style.display = 'block';
             filterBox.focus();
@@ -212,7 +208,6 @@ function inject(emojiApiPath) {
         
         var open = false;
         var {element: emojiTable, onOpen, onClose} = createEmojiGrid(emojiList, (event, emoji) => {
-            console.log(emoji + ' clicked');
             typeInInput(':'+emoji+':')
         }, (event) => {
             emojiTable.style.display = 'none';
@@ -220,7 +215,6 @@ function inject(emojiApiPath) {
         buttonContainer.appendChild(emojiTable);
 
         emojiCloned.addEventListener('click', () => {
-            console.log('opening');
             if(open){
                 onClose();
                 open = false;
@@ -228,7 +222,6 @@ function inject(emojiApiPath) {
                 onOpen();
                 open = true;
             }
-            //emojiTable.style.display = 'block';
         });
     }
 
