@@ -44,7 +44,7 @@ function inject(emojiApiPath) {
     }
 
     function createImgTag(emoticonName) {
-        return `<img class="emoji-img" src="${emojiApiPath}/emoticon/${emoticonName}" title="${emoticonName}">`;
+        return '<img class="emoji-img" src="'+emojiApiPath+'/emoticon/'+emoticonName+'" title="'+emoticonName+'">';
     }
     
     function createElementFromHTML(htmlString) {
@@ -76,6 +76,7 @@ function inject(emojiApiPath) {
         if (!resultStr.endsWith('&nbsp;')) {
             //a characer of some sort is requred to get emoji at the end of a message to display correctly
             // don't ask me why
+            // also don't ask me why it's not needed anymore
             // resultStr += '&nbsp;';
         }
         return resultStr;
@@ -91,6 +92,9 @@ function inject(emojiApiPath) {
     function typeInInput(text){
         const editorWindow = document.getElementsByClassName('ts-edit-box').item(0);
         const textContainer = editorWindow.getElementsByClassName('cke_editable').item(0).firstElementChild;
+        if(textContainer.innerHTML.contains('br')){
+            textContainer.innerHTML = '';
+        }
         textContainer.innerText = textContainer.innerText + text;
     }
 
@@ -193,7 +197,7 @@ function inject(emojiApiPath) {
         
         var emojiTable = createEmojiGrid(emojiList, (event, emoji) => {
             console.log(emoji + ' clicked');
-            typeInInput(`:${emoji}:`)
+            typeInInput(':'+emoji+':')
         }, (event) => {
             emojiTable.style.display = 'none';
         });
