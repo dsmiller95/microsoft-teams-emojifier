@@ -38,6 +38,18 @@ function inject(emojiApiPath) {
         });
     }
 
+    function postEmojiUsages(emojiUsages) {
+        return new Promise((resolve, reject) => {
+            $.post({
+                url: emojiApiPath + '/emoticons/usage',
+                data: JSON.stringify(emojiUsages),
+                processData: false,
+                contentType: 'application/json',
+                success: () => resolve()
+            })
+        });
+    }
+
     function getMessageContentList() {
         return $('.message-body-content > div:not(.' + emojiClass + ')').toArray();
     }
@@ -52,7 +64,7 @@ function inject(emojiApiPath) {
         return div.firstChild; 
     }
 
-    function crawlTree(htmlElement, handleLeaf){
+    function crawlTree(htmlElement, handleLeaf) {
         if(htmlElement.childElementCount <= 0){
             handleLeaf(htmlElement);
             return;
@@ -65,7 +77,7 @@ function inject(emojiApiPath) {
 
     var emojiClass = 'EMOJIFIER-CHECKED';
     var emojiMatch = /:([\w-]+):/g;
-    function injectEmojiImages(inputText, validEmojis) {
+    function injectEmojiImages(inputText, validEmojis, emojisUsed) {
         var resultStr = "";
         var matches = inputText.matchAll(emojiMatch);
         var currentIndexInInput = 0;
@@ -74,7 +86,9 @@ function inject(emojiApiPath) {
         while (!(match = matches.next()).done) {
             var reInjectText = match.value[0];
             if (validEmojis.indexOf(match.value[1]) != -1) {
-                reInjectText = createImgTag(match.value[1]);
+                const emojiName = match.value[1];
+                reInjectText = createImgTag(emojiName);
+                emojisUsed[emojiName] = (emojisUsed[emojiName] === undefined ? 0 : emojisUsed[emojiName]) + 1;
             }
 
             resultStr += inputText.substring(currentIndexInInput, match.value.index);
@@ -91,11 +105,10 @@ function inject(emojiApiPath) {
         return resultStr;
     }
 
-    function emojifyMessageDiv(div, validEmojis) {
+    function emojifyMessageDiv(div, validEmojis, emojisUsed) {
         crawlTree(div, (leaf) => {
-            leaf.innerHTML = injectEmojiImages(leaf.innerHTML, validEmojis);
+            leaf.innerHTML = injectEmojiImages(leaf.innerHTML, validEmojis, emojisUsed);
         });
-        //div.innerHTML = injectEmojiImages(div.innerHTML, validEmojis);
         div.classList.add(emojiClass);
     }
 
@@ -144,17 +157,6 @@ function inject(emojiApiPath) {
         return inputBox;
     }
 
-    function generateEmojiImgList(emojiList){
-        return emojiList.map(emoji => {
-            const emojiElement = createElementFromHTML(createImgTag(emoji));
-            emojiElement.addEventListener('click', (event) => {
-                emojiClickListener(event, emoji);
-                onClose(event);
-            });
-            return emojiElement;
-        });
-    }
-
     function filterEmoji(emojiName, filterText){
         return emojiName.contains(filterText);
     }
@@ -179,7 +181,7 @@ function inject(emojiApiPath) {
             onClose();
         });
         emojiFilterChangeListeners = emojiList.map(emoji => {
-            const emojiElement = createElementFromHTML(createImgTag(emoji));
+            const emojiElement = createElementFromHTML(createImgTag(emoji, 'preview'));
             emojiElement.addEventListener('click', (event) => {
                 emojiSelectedListener(event, emoji);
                 onClose(event);
@@ -287,14 +289,28 @@ function inject(emojiApiPath) {
         console.log("fetching valid emojis from " + emojiApiPath);
         getValidEmojis().then(emojis => {
             console.log(emojis);
+            var emojisUsed = {};
             setInterval(
                 () => {
                     var messageList = getMessageContentList();
-                    messageList.forEach(div => emojifyMessageDiv(div, emojis));
+                    messageList.forEach(div => emojifyMessageDiv(div, emojis, emojisUsed));
                     injectPreviewButtons(emojis);
                 },
                 2000
             );
+            setInterval(
+                () => {
+                    if(Object.keys(emojisUsed).length <= 0){
+                        return;
+                    }
+                    console.log(emojisUsed);
+                    postEmojiUsages(emojisUsed).then(posted => {
+                        console.log(posted);
+                    });
+                    emojisUsed = {};
+                },
+                10000
+            )
         });
     }
 
