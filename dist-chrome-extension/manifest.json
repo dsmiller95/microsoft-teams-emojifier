@@ -3,8 +3,7 @@
     "version": "1.2",
     "description": "Adds emoji to microsoft teams via an external emoji server!",
     "permissions": [
-        "storage",
-        "activeTab"
+        "storage"
     ],
     "content_scripts": [
         {

@@ -303,9 +303,7 @@ function inject(emojiApiPath) {
                     if(Object.keys(emojisUsed).length <= 0){
                         return;
                     }
-                    console.log(emojisUsed);
                     postEmojiUsages(emojisUsed).then(posted => {
-                        console.log(posted);
                     });
                     emojisUsed = {};
                 },
