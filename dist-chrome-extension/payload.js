@@ -174,7 +174,7 @@ function inject(emojiApiPath) {
         const filterBox = generateFilterBox(newFilter => {
             emojiFilterChangeListeners.forEach(onchange => onchange(newFilter));
             
-            table.scrollTop = table.scrollHeight;
+            emojiTableContainer.scrollTop = emojiTableContainer.scrollHeight;
         }, 500, selectedFilter => {
             var emoji = emojiList.find(emoji => emoji.contains(selectedFilter));
             emojiSelectedListener(null, emoji);
@@ -194,12 +194,18 @@ function inject(emojiApiPath) {
 
         const outputT = document.createElement('div');
         outputT.className = 'emoji-popup';
-        outputT.appendChild(table);
+
+        const emojiTableContainer = document.createElement('div');
+        emojiTableContainer.className = 'emoji-flex-table-container';
+        emojiTableContainer.appendChild(table);
+
+        outputT.appendChild(emojiTableContainer);
         outputT.appendChild(filterBox);
         outputT.appendChild(generateCloseHeader(onClose));
+
         const onOpen = () => {
             outputT.style.display = 'block';
-            table.scrollTop = table.scrollHeight;
+            emojiTableContainer.scrollTop = emojiTableContainer.scrollHeight;
             filterBox.focus();
         };
         return {
@@ -265,11 +271,13 @@ function inject(emojiApiPath) {
 }
 .emoji-flex-table {
     display: flex;
-    flex-flow: row-reverse wrap;
-    justify-content: flex-end;
+    flex-flow: row wrap-reverse;
+    justify-content: flex-start;
     align-items: flex-end;
-    max-height: 200px;
     width: 500px;
+}
+.emoji-flex-table-container {
+    max-height: 200px;
     overflow-y: scroll;
 }
 .emoji-flex-table .emoji-img {
