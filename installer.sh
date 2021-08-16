@@ -8,7 +8,11 @@ sed -i '/\/\*\{8\}BEGIN EMOJIINJECT\*\{8\}\//,/\/\*\{8\}END EMOJIINJECT\*\{8\}\/
 
 #Inject the emoji payload
 echo "/********BEGIN EMOJIINJECT********/" >> ./electron.unpacked/browser/chrome-extension.js;
-echo "app.on('browser-window-focus', function (event, bWindow) {bWindow.webContents.executeJavaScript(\`" >> ./electron.unpacked/browser/chrome-extension.js;
+echo "app.on('browser-window-created', function (event, bWindow) {bWindow.webContents.executeJavaScript(\`" >> ./electron.unpacked/browser/chrome-extension.js;
+# this line used to force debgging inside electron
+# echo "app.on('browser-window-focus', function (event, bWindow) {bWindow.webContents.openDevTools();debugger;bWindow.webContents.executeJavaScript(\`" >> ./electron.unpacked/browser/chrome-extension.js;
+
+
 #Inject the source emoji server from an environment variable
 echo "window.EMOJI_API = '"$EMOJI_URL"';" >> ./electron.unpacked/browser/chrome-extension.js;
 #sed is used here to escape any existing backtick quotes or escape characters. using those style of quotes for now because the payload comes in as multiline
