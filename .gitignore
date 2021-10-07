@@ -1,3 +1,4 @@
 electron.unpacked
 **/node_modules
 dist-chrome-extension.zip
+dist-chrome-extension/payload.js

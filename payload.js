@@ -32,23 +32,23 @@ if (window.SECRET_EMOJI_KEY != "set") {
 function inject(emojiApiPath) {
   function getValidEmojis() {
     return new Promise((resolve, reject) => {
-      $.get(emojiApiPath + "/emoticons", (result) => {
+      $.get(emojiApiPath + "/emojis", (result) => {
         resolve(result);
       });
     });
   }
 
-  function postEmojiUsages(emojiUsages) {
-    return new Promise((resolve, reject) => {
-      $.post({
-        url: emojiApiPath + "/emoticons/usage",
-        data: JSON.stringify(emojiUsages),
-        processData: false,
-        contentType: "application/json",
-        success: () => resolve(),
-      });
-    });
-  }
+  // function postEmojiUsages(emojiUsages) {
+  //   return new Promise((resolve, reject) => {
+  //     $.post({
+  //       url: emojiApiPath + "/emojis/usage",
+  //       data: JSON.stringify(emojiUsages),
+  //       processData: false,
+  //       contentType: "application/json",
+  //       success: () => resolve(),
+  //     });
+  //   });
+  // }
 
   function getMessageContentList() {
     return $(".message-body-content > div:not(." + emojiClass + ")").toArray();
@@ -58,11 +58,11 @@ function inject(emojiApiPath) {
     return (
       '<img class="emoji-img" src="' +
       emojiApiPath +
-      "/emoticon/" +
+      "/emoji/" +
       emoticonName +
       '" title="' +
       emoticonName +
-      '">'
+      '" loading="lazy">'
     );
   }
 
@@ -288,7 +288,8 @@ function inject(emojiApiPath) {
 
   var CssInject = `
 .emoji-img {
-    height: 2em !important;
+    height: 28px !important;
+    width: 28px !important;
     display: inline-block;
     position: static !important;
 }
@@ -338,13 +339,13 @@ function inject(emojiApiPath) {
         );
         injectPreviewButtons(emojis);
       }, 2000);
-      setInterval(() => {
-        if (Object.keys(emojisUsed).length <= 0) {
-          return;
-        }
-        postEmojiUsages(emojisUsed).then((posted) => {});
-        emojisUsed = {};
-      }, 10000);
+      // setInterval(() => {
+      //   if (Object.keys(emojisUsed).length <= 0) {
+      //     return;
+      //   }
+      //   postEmojiUsages(emojisUsed).then((posted) => {});
+      //   emojisUsed = {};
+      // }, 10000);
     });
   }
 
