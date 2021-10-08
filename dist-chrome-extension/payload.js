@@ -159,11 +159,13 @@ function inject(emojiApiPath) {
         const onClose = (event) => {
             // FIXME
             //filterBox.value = "";
-            emojiFilterChangeListeners.forEach((onchange) => onchange(""));
+            emojiFilterChangeListeners.forEach((onchange) => { if (onchange)
+                onchange(""); });
             closeListener(event);
         };
         const filterBox = generateFilterBox((newFilter) => {
-            emojiFilterChangeListeners.forEach((onchange) => onchange(newFilter));
+            emojiFilterChangeListeners.forEach((onchange) => { if (onchange)
+                onchange(newFilter); });
             emojiTableContainer.scrollTop = emojiTableContainer.scrollHeight;
         }, 500, (selectedFilter) => {
             var emoji = emojiList.find((emoji) => emoji.includes(selectedFilter));

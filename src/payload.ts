@@ -150,7 +150,9 @@ function inject(emojiApiPath: string | undefined) {
 		}
 	}
 
-	function generateFilterBox(onFilterChange: { (newFilter: any): void; (arg0: string): void; }, debounce: number | undefined, onFilterSelected: { (selectedFilter: any): void; (arg0: string): void; }) {
+	function generateFilterBox(onFilterChange: { (newFilter: string): void },
+														 debounce: number | undefined,
+														 onFilterSelected: { (selectedFilter: string): void }) {
 		const inputBox = document.createElement("input");
 		inputBox.placeholder = "🔍  Search"
 		let lastTimeout = 0;
@@ -181,25 +183,25 @@ function inject(emojiApiPath: string | undefined) {
 
 	function createEmojiGrid(emojiList: string[],
 													 emojiSelectedListener: { (event: Event | null, emoji: string | undefined): void },
-													 closeListener: { (event: any): void }) {
+													 closeListener: { (event: Event | undefined): void }) {
 		const table = document.createElement("div");
 		table.classList.add("emoji-flex-table");
 
-		let emojiFilterChangeListeners: any[] = [];
+		let emojiFilterChangeListeners: (((filter: string) => void) | undefined)[] = [];
 		const onClose = (event?: Event | undefined) => {
 			// FIXME
 			//filterBox.value = "";
-			emojiFilterChangeListeners.forEach((onchange) => onchange(""));
+			emojiFilterChangeListeners.forEach((onchange) => {if (onchange) onchange("")});
 			closeListener(event);
 		};
 		const filterBox = generateFilterBox(
-			(newFilter: any) => {
-				emojiFilterChangeListeners.forEach((onchange) => onchange(newFilter));
+			(newFilter: string) => {
+				emojiFilterChangeListeners.forEach((onchange) => {if (onchange ) onchange(newFilter)});
 
 				emojiTableContainer.scrollTop = emojiTableContainer.scrollHeight;
 			},
 			500,
-			(selectedFilter: any) => {
+			(selectedFilter: string) => {
 				var emoji = emojiList.find((emoji) => emoji.includes(selectedFilter));
 				emojiSelectedListener(null, emoji);
 				onClose();
@@ -215,7 +217,7 @@ function inject(emojiApiPath: string | undefined) {
 					onClose(event);
 				});
 				table.appendChild(emojiElement);
-				return (newFilter: any) => {
+				return (newFilter: string) => {
 					emojiElement.style.display = filterEmoji(emoji, newFilter)
 						? "block"
 						: "none";
