@@ -1,0 +1,24 @@
+{
+	"compilerOptions": {
+		"target": "es6",
+		"module": "esnext",
+		"outDir": "dist-chrome-extension",
+		"lib": [
+			"esnext",
+			"DOM",
+			"DOM.Iterable"
+		],
+		"allowJs": true,
+		"strict": true,
+		"skipLibCheck": false,
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"noFallthroughCasesInSwitch": true
+	},
+	"include": [
+		"src"
+	]
+}
