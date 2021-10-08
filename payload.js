@@ -33,7 +33,7 @@ function inject(emojiApiPath) {
   function getValidEmojis() {
     return new Promise((resolve, reject) => {
       $.get(emojiApiPath + "/emojis", (result) => {
-        resolve(result);
+        resolve(result.sort());
       });
     });
   }
@@ -136,23 +136,9 @@ function inject(emojiApiPath) {
     textContainer.innerText = textContainer.innerText + text;
   }
 
-  function generateCloseHeader(closeListener) {
-    const closeHeader = document.createElement("div");
-    closeHeader.style.textAlign = "end";
-    const closeOption = document.createElement("span");
-    closeOption.innerText = "Close";
-    closeOption.style.fontSize = "1.2em";
-    closeOption.style.fontWeight = "700";
-    closeOption.style.cursor = "pointer";
-    closeOption.addEventListener("click", (event) => {
-      closeListener(event);
-    });
-    closeHeader.appendChild(closeOption);
-    return closeHeader;
-  }
-
   function generateFilterBox(onFilterChange, debounce, onFilterSelected) {
     const inputBox = document.createElement("input");
+		inputBox.placeholder = "🔍  Search"
     let lastTimeout = 0;
 
     inputBox.addEventListener("input", (event) => {
@@ -169,7 +155,10 @@ function inject(emojiApiPath) {
       }
     });
 
-    return inputBox;
+		const inputBoxContainer = document.createElement("div");
+		inputBoxContainer.id = "emoji-input-box-container";
+		inputBoxContainer.appendChild(inputBox);
+    return inputBoxContainer;
   }
 
   function filterEmoji(emojiName, filterText) {
@@ -201,7 +190,7 @@ function inject(emojiApiPath) {
     );
     emojiFilterChangeListeners = emojiList.map((emoji) => {
       const emojiElement = createElementFromHTML(
-        createImgTag(emoji, "preview")
+				createImgTag(emoji)
       );
       emojiElement.addEventListener("click", (event) => {
         emojiSelectedListener(event, emoji);
@@ -224,10 +213,16 @@ function inject(emojiApiPath) {
 
     outputT.appendChild(emojiTableContainer);
     outputT.appendChild(filterBox);
-    outputT.appendChild(generateCloseHeader(onClose));
 
     const onOpen = () => {
       outputT.style.display = "block";
+			// Turn off watermark since so it doesn't look jumbled when selecting an emoji and no other
+			// text has been entered
+			document.getElementsByClassName('ts-text-watermark')[0].textContent = "";
+			// don't cut off the popover in replies
+			for (const element of document.getElementsByClassName('ts-message-list-item')) {
+				element.style.overflow = "visible";
+			}
       emojiTableContainer.scrollTop = emojiTableContainer.scrollHeight;
       filterBox.focus();
     };
@@ -288,36 +283,56 @@ function inject(emojiApiPath) {
 
   var CssInject = `
 .emoji-img {
-    height: 28px !important;
-    width: 28px !important;
+    height: 24px !important;
+    width: 24px !important;
     display: inline-block;
     position: static !important;
 }
+.emoji-flex-table > .emoji-img {
+    margin: 6px 4px;
+}
+.emoji-popup input {
+    width: 100%;
+    border: 2px solid #ccc;
+    height: 3rem;
+}
 .emoji-popup {
-    background: #C8C8C8;
+    background: #FFF;
     position: absolute;
     z-index: 1000;
     left: 100px;
     bottom: 30px;
     font-size: 1.4rem;
     display: none;
-    color: black; //dark mode makes all text white
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 0 0 1px rgb(232 232 232 / 13%), 0 4px 12px 0 rgb(0 0 0 / 8%);
+    padding-top: 4px;
 }
 .emoji-flex-table {
     display: flex;
     flex-flow: row wrap-reverse;
     justify-content: flex-start;
     align-items: flex-end;
-    width: 500px;
+    width: 300px;
 }
 .emoji-flex-table-container {
-    max-height: 200px;
+    max-height: 294px;
+    padding: 12px 0 6px 6px;
     overflow-y: scroll;
+}
+.emoji-flex-table-container::-webkit-scrollbar {
+    display: none;
 }
 .emoji-flex-table .emoji-img {
     cursor: pointer;
 }
-        `;
+#emoji-input-box-container {
+    padding: 8px 12px 10px 12px;
+    border-top: 1px solid #ccc;
+}
+`;
 
   function injectCSS(inputCss) {
     var style = document.createElement("style");
