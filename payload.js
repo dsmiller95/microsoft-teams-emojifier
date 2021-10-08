@@ -224,7 +224,7 @@ function inject(emojiApiPath) {
 				element.style.overflow = "visible";
 			}
       emojiTableContainer.scrollTop = emojiTableContainer.scrollHeight;
-      filterBox.focus();
+      filterBox.firstChild.focus();
     };
     return {
       element: outputT,
@@ -342,6 +342,8 @@ function inject(emojiApiPath) {
   }
 
   function init() {
+		// Disable Teams' :stupit: auto-emoji generation. We can handle our own colons just fine, tyvm
+		teamspace.services.EmoticonPickerHandler.prototype.insertInEditor = function() {};
     injectCSS(CssInject);
     console.log("fetching valid emojis from " + emojiApiPath);
     getValidEmojis().then((emojis) => {
